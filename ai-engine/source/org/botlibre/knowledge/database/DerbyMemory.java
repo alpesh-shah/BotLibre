@@ -168,28 +168,9 @@ public class DerbyMemory extends DatabaseMemory {
 			server.getLogin().getSequence("SEQ_GEN").setPreallocationSize(1000);
 			
 			if (recreateDatabase) {
-				this.entityManager.getTransaction().begin();
 				try {					
-					Query query = this.entityManager.createNativeQuery("ALTER TABLE relationship DROP CONSTRAINT fk_relationship_source_id");
-					query.executeUpdate();
-					query = this.entityManager.createNativeQuery("ALTER TABLE relationship ADD CONSTRAINT fk_relationship_source_id FOREIGN KEY (source_id) " +
-								"REFERENCES vertex (id) ON DELETE CASCADE");
-					query.executeUpdate();
-					
-					query = this.entityManager.createNativeQuery("ALTER TABLE relationship DROP CONSTRAINT fk_relationship_target_id");
-					query.executeUpdate();
-					query = this.entityManager.createNativeQuery("ALTER TABLE relationship ADD CONSTRAINT fk_relationship_target_id FOREIGN KEY (target_id) " +
-								"REFERENCES vertex (id) ON DELETE CASCADE");
-					query.executeUpdate();
-					
-					query = this.entityManager.createNativeQuery("ALTER TABLE relationship DROP CONSTRAINT fk_relationship_type_id");
-					query.executeUpdate();
-					query = this.entityManager.createNativeQuery("ALTER TABLE relationship ADD CONSTRAINT fk_relationship_type_id FOREIGN KEY (type_id) " +
-								"REFERENCES vertex (id) ON DELETE CASCADE");
-					query.executeUpdate();
-					this.entityManager.getTransaction().commit();
-
 					this.entityManager.getTransaction().begin();
+					Query query = null;
 					try {
 						query = this.entityManager.createNativeQuery("create table schema_version (version int)");
 						query.executeUpdate();

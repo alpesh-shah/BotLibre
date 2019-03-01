@@ -1335,6 +1335,41 @@ public class Language extends BasicThought {
 		memory.save();
 	}
 
+	//Implemented initialize to setup some property for Language so that it becomes configurable from config file. 
+	/**
+	 * Initialize any configurable settings from the properties.
+	 */
+	@Override
+	public void initialize(Map<String, Object> properties) {
+
+		Object property = properties.get("Language.correctionMode");			
+			if (property != null) {
+				setCorrectionMode(CorrectionMode.valueOf((String)property));
+			}
+			
+			property = properties.get("Language.learningMode");			
+			if (property != null) {
+				setLearningMode(LearningMode.valueOf((String)property));
+			}
+			
+			property = properties.get("Language.learnGrammar");			
+			if (property != null) {
+				setLearnGrammar(Boolean.valueOf((String)property));
+			}
+			
+			property = properties.get("Language.checkSynonyms");			
+			if (property != null) {
+				setCheckSynonyms(Boolean.valueOf((String)property));
+			}
+			
+			property = properties.get("Language.reduceQuestions");			
+			if (property != null) {
+				setReduceQuestions(Boolean.valueOf((String)property));
+			}
+	}
+	
+	
+	
 	public Map<Primitive, Object> clearVoiceProperties() {
 		Map<Primitive, Object> properties = new HashMap<Primitive, Object>();
 		Network memory = getBot().memory().newMemory();
@@ -2643,6 +2678,7 @@ public class Language extends BasicThought {
 			return null;
 		}
 		Collection<Relationship> repeats = response.getRelationships(Primitive.ONREPEAT);
+		log("Response was already used before so finding unused on repeat",Level.FINE, repeats);
 		// Find unused repeat.
 		for (Relationship repeat : repeats) {
 			if (!conversation.hasRelationship(Primitive.SENTENCE, repeat.getTarget())) {
@@ -4738,7 +4774,8 @@ public class Language extends BasicThought {
 			Map.Entry<Vertex, Integer> bestEntry = null;
 			Map.Entry<Vertex, Integer> secondBestEntry = null;
 			for (Map.Entry<Vertex, Integer> entry : matches.entrySet()) {
-				if (entry.getValue() > bestValue && (sentence != entry.getKey())) {
+				//added equal comparison to make question with same score as second best
+				if (entry.getValue() >= bestValue && (sentence != entry.getKey())) {
 					secondBestEntry = bestEntry;
 					bestValue = entry.getValue();
 					bestEntry = entry;

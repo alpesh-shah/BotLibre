@@ -98,7 +98,7 @@ public class DerbyMemory extends DatabaseMemory {
 			}
 			this.bot.log(this, "Restoring", Bot.FINE);
 			Map<String, String> properties = new HashMap<String, String>();
-			//properties.put(PersistenceUnitProperties.JDBC_DRIVER, DATABASE_DRIVER);
+			properties.put(PersistenceUnitProperties.JDBC_DRIVER, DATABASE_DRIVER);
 			if (RECREATE_DATABASE) {
 				recreateDatabase = true;
 			}
@@ -394,7 +394,7 @@ public class DerbyMemory extends DatabaseMemory {
 			Connection connection = accessor.getConnection();
 			Statement statement = connection.createStatement();
 			if (isSchema) {
-				statement.executeUpdate("DROP SCHEMA " + database + " CASCADE");				
+				statement.executeUpdate("DROP SCHEMA " + database + " restrict");				
 			} else {
 				statement.executeUpdate("DROP DATABASE " + database);
 			}

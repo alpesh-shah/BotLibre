@@ -324,9 +324,18 @@ public class BasicMemory implements Memory {
 	}
 
 	public String toString() {
-		return getClass().getSimpleName() + "(active(" + this.activeMemory.size()
-			//+ "), short(" + this.shortTermMemory.size()
-			+ "), long(" + this.longTermMemory.size() + "))";			
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		if(this.activeMemory != null)
+			sb.append("(active(" + this.activeMemory.size()+")");
+		if(this.shortTermMemory != null)
+			sb.append(", short(" + this.shortTermMemory.size()+")");
+		if(this.longTermMemory != null)
+			sb.append(", long(" + this.longTermMemory.size() + ")");
+		
+		sb.append(")");
+		
+		return sb.toString();
 	}
 
 	public List<MemoryEventListener> getListeners() {

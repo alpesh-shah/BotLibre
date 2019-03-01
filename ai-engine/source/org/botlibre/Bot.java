@@ -17,9 +17,11 @@
  ******************************************************************************/
 package org.botlibre;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -112,8 +114,18 @@ public class Bot {
 		};
 		out.setLevel(Level.ALL);
 		root.addHandler(out);
+		//create log files in separate folder
+		String rootFolder;
 		try {
-			FileHandler file = new FileHandler("Bot.log", 5000000, 50);
+			rootFolder = new File(Bot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath()+File.separator;
+		} catch (URISyntaxException e) {
+			rootFolder="."+File.separator;
+		}
+		File f = new File(rootFolder+File.separator+"log");
+		if(!f.exists())
+			f.mkdir();
+		try {
+			FileHandler file = new FileHandler(rootFolder+"log"+File.separator+"Bot.log", 5000000, 50);
 			file.setFormatter(new SimpleFormatter());
 			file.setLevel(Level.ALL);
 			root.addHandler(file);
@@ -121,7 +133,7 @@ public class Bot {
 			exception.printStackTrace();
 		}
 		try {
-			FileHandler file = new FileHandler("Bot.err", 5000000, 50);
+			FileHandler file = new FileHandler(rootFolder+"log"+File.separator+"Bot.err", 5000000, 50);
 			file.setFormatter(new SimpleFormatter());
 			file.setLevel(Level.WARNING);
 			root.addHandler(file);
